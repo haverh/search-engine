@@ -1,0 +1,88 @@
+html {
+    background-color: rgb(145, 151, 150);
+}
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#elements {
+    width: 50%;
+    margin: 10em auto;
+}
+
+#title {
+    width: 50%;
+    margin: auto;
+    margin-top: 3em;
+}
+
+#searchbox {
+    display: flex;
+    width: 70%;
+    margin: auto;
+    align-items: center;
+    border-radius: 1em;
+    box-shadow: 7px 5px 5px rgba(0,0,0,0.6);
+}
+
+h1 {
+    font-family: 'Kaushan Script', cursive;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+    font-size: 3em;
+    margin: 5px 1px;
+    border-color: aquamarine;
+    border-width: 2px;
+}
+
+input {
+    font-size: 1em;
+    margin: 0;
+    width: 90%;
+    height: 3em;
+    border-top-left-radius: 1em;
+    border-bottom-left-radius: 1em;
+}
+
+#searchButton img {
+    width: 70%;
+}
+
+#searchButton {
+    display: flex;
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(204, 235, 228);
+    font-size: 1em;
+    width: 10%;
+    height: 3.4em;
+    border-top-right-radius: 1em;
+    border-bottom-right-radius: 1em;
+}
+
+#searchButton:hover {
+    cursor: pointer;
+    transform: scale(1.02);
+}
+
+#searchButton:hover img {
+    width: 80%;
+}
+
+.logo img {
+    width: 100%;
+    margin-left: auto;
+}
+.logo {
+    width: 70%  ;
+    display: flex;
+    margin: auto;
+    justify-content: center;
+}
+
+.textTitle {
+    margin-bottom: 1em;
+}
