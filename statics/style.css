@@ -26,6 +26,7 @@ body {
     box-shadow: 7px 5px 5px rgba(0,0,0,0.6);
 }
 
+
 h1 {
     font-family: 'Kaushan Script', cursive;
     font-weight: bold;
@@ -58,7 +59,7 @@ input {
     background-color: rgb(204, 235, 228);
     font-size: 1em;
     width: 10%;
-    height: 3.4em;
+    height: 3em;
     border-top-right-radius: 1em;
     border-bottom-right-radius: 1em;
 }
