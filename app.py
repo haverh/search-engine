@@ -10,7 +10,19 @@ def home():
 
 
 @app.route("/", methods=["POST"])
-def searchPOST():
+def homePOST():
+    text = request.form["srch"]
+    print(text)
+    return searchFor(text)
+
+
+@app.route("/search")
+def searched():
+    return render_template("searched.html")
+
+
+@app.route("/search", methods=["POST"])
+def searchedPOST():
     text = request.form["srch"]
     print(text)
     return searchFor(text)
