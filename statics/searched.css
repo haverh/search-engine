@@ -2,7 +2,7 @@ html {
     background-color: rgb(145, 151, 150);
 }
 
-#elements {
+#searchElements {
     display: flex;
     height: 5em;
     margin: 1em;
@@ -15,7 +15,7 @@ html {
 
 .logo {
     width: 7em;
-    margin-right: 2em;
+    margin: 5px 40px;
     height: auto;
 }
 
@@ -37,13 +37,12 @@ html {
 }
 
 #searchbar {
-    align-items: center;
     font-size: 1em;
-    margin: 0;
-    width: ;
-    height: 3em;
+    width: 600px;
+    height: 50px;
     border-top-left-radius: 1em;
     border-bottom-left-radius: 1em;
+    border-right-style: hidden;
 }
 
 #searchButton {
@@ -52,11 +51,15 @@ html {
     justify-content: center;
     align-items: center;
     background-color: rgb(204, 235, 228);
-    font-size: 1em;
-    width: 10%;
-    height: 3em;
+    width: 50px;
+    height: 50px;
     border-top-right-radius: 1em;
     border-bottom-right-radius: 1em;
+    border-left-style: hidden;
+}
+
+#searchButton:hover {
+    cursor: pointer;
 }
 
 #searchButton img {
