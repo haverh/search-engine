@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from search import searchFor
+import linecache
 
 app = Flask(__name__, template_folder="templates", static_folder="statics")
 
@@ -29,4 +30,5 @@ def searchedPOST():
 
 
 if __name__ == "__main__":
+    linecache.getline("id.txt", 0)
     app.run(debug=True)

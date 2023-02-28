@@ -1,6 +1,7 @@
 html {
-    background-color: rgb(145, 151, 150);
+    /* background-color: rgb(145, 151, 150); */
 }
+
 body {
     margin: 0;
     padding: 0;
@@ -45,6 +46,8 @@ input {
     height: 3em;
     border-top-left-radius: 1em;
     border-bottom-left-radius: 1em;
+    border-right-style: hidden;
+    outline: 0;
 }
 
 #searchButton img {
@@ -62,11 +65,11 @@ input {
     height: 3em;
     border-top-right-radius: 1em;
     border-bottom-right-radius: 1em;
+    outline: 0;
 }
 
 #searchButton:hover {
     cursor: pointer;
-    transform: scale(1.02);
 }
 
 #searchButton:hover img {

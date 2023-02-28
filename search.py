@@ -1,38 +1,4 @@
-# search.py
-# Search Component of the Search Engine
-# MS2
-# import engine.py
-# import pickle
-# invertedIndexFileName = "indexer.txt"
 
-# # User Input
-# print("Using the search component of the Search Engine!")
-# query = input("Enter the query you want to find: ")
-# query = query.lower()
-# # Split the query into individual words
-# # e.g. cristina lopes ==> ["cristina", "lopes"]
-# splitQuery = query.split()
-
-
-# # Retriving inverted index from file stored in disk
-
-# invertedIndexFile = open(invertedIndexFileName, "r")
-# invertedIndex = pickle.load(invertedIndexFile)
-# invertedIndexFile.close()
-
-
-# # Boolean Query
-
-# # Set the initial "intersection" as the first word in the query
-# intersectionQuery = invertedIndex[splitQuery[0]]
-# splitQuery.pop(0)
-# for word in splitQuery:
-#     intersectionQuery.intersection(word)
-# listt = list(intersectionQuery)
-
-# print(intersectionQuery)
-# print()
-# print(listt[0:5])
 import ast
 import linecache
 from nltk.stem import PorterStemmer
@@ -40,9 +6,8 @@ import pickle
 import time
 from operator import itemgetter
 from functools import reduce
-# extracting the 3th line
-# line 3 == 4
-# line _ == firstline
+from flask import Flask, render_template, request
+
 ps = PorterStemmer()
 docID = 'id.txt'
 indexer = 'offset.bin'
@@ -50,32 +15,16 @@ urls = 'urls.txt'
 
 
 def recache(lineNo, targetLen):
-    # start3 = time.time()
-    # linecache.clearcache()
     line = linecache.getline(docID, lineNo)
-    # print(line[0:30])
-    # print("RECACHE -> " + str(time.time() - start3))
     return line[0:30].split('|')[0]
 
 
-'''
-line[1] = int(line[1])
-line[2] = line[2].strip() + ","
-line[2] = dict(ast.literal_eval(line[2]))
-#line[2] = docIDs
-return line
-'''
-
-
 def getLine(lineNo):
-    # linecache.clearcache()
-    start2 = time.time()
     line = linecache.getline(docID, lineNo)
     line = line.split('|')
     line[1] = int(line[1])
     line[2] = line[2].rstrip() + ','
     line[2] = dict(ast.literal_eval(line[2]))
-    print("GETLINE -> " + str(time.time()-start2))
     return line
 
 
@@ -90,14 +39,7 @@ def search(low, high, piv, tar):
         line = recache(piv, len(tar))
 
         if (line == tar):
-            # print(piv)
             return getLine(piv)
-        '''
-    	if (low == high):
-        	line = recache(docID,low)
-        	if (line < tar): return [tar,0,dict()];
-        	if (line > tar): return [tar,0,dict()];
-		'''
 
         if (line > tar):
             high = piv-1
@@ -108,15 +50,8 @@ def search(low, high, piv, tar):
     return [tar, 0, dict()]
 
 
-# line = recache(docID,1)
-'''
-low = 2
-high = int(line[0]) + 1
-piv = int((high-low) / 2)
-'''
 indexFile = open(indexer, 'rb')
 offset = pickle.load(indexFile)
-# print(offset)
 
 '''
 while (1):
@@ -157,6 +92,8 @@ while (1):
     print(time.time() - starttime)
     '''
 
+linecache.getline(docID, 0)
+
 
 def searchFor(queryString):
     starttime = time.time()
@@ -191,6 +128,39 @@ def searchFor(queryString):
     for i in range(0, 5):
         sect[i] = getUrl(sect[i][1])
 
+    print(time.time() - starttime)
     return sect[0:5]
     # print(sect[0:5])
     # print(time.time() - starttime)
+
+
+app = Flask(__name__, template_folder="templates", static_folder="statics")
+
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+
+@app.route("/", methods=["POST"])
+def homePOST():
+    text = request.form["srch"]
+    print(text)
+    return searchFor(text)
+
+
+@app.route("/search")
+def searched():
+    return render_template("searched.html")
+
+
+@app.route("/search", methods=["POST"])
+def searchedPOST():
+    text = request.form["srch"]
+    print(text)
+    return searchFor(text)
+
+
+if __name__ == "__main__":
+    linecache.getline("id.txt", 0)
+    app.run(debug=True)

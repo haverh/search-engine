@@ -15,12 +15,12 @@ html {
 
 .logo {
     width: 7em;
-    margin: 5px 40px;
+    margin: 5px 25px;
     height: auto;
 }
 
 .logo img{
-    width: 100%;
+    width: 80%;
     height: auto;
 }
 
@@ -43,6 +43,7 @@ html {
     border-top-left-radius: 1em;
     border-bottom-left-radius: 1em;
     border-right-style: hidden;
+    outline: 0;
 }
 
 #searchButton {
@@ -51,11 +52,10 @@ html {
     justify-content: center;
     align-items: center;
     background-color: rgb(204, 235, 228);
-    width: 50px;
+    width: 60px;
     height: 50px;
     border-top-right-radius: 1em;
     border-bottom-right-radius: 1em;
-    border-left-style: hidden;
 }
 
 #searchButton:hover {
@@ -63,5 +63,9 @@ html {
 }
 
 #searchButton img {
-    width: 70%;
+    width: 60%;
+}
+
+#searchButton:hover img {
+    width: 65%;
 }
