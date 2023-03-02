@@ -9,9 +9,9 @@ from functools import reduce
 from flask import Flask, render_template, request
 
 ps = PorterStemmer()
-docID = 'id.txt'
-indexer = 'offset.bin'
-urls = 'urls.txt'
+docID = 'mastermerge.txt'
+indexer = 'offset2.bin'
+urls = 'urls2.txt'
 
 
 def recache(lineNo, targetLen):
@@ -52,45 +52,7 @@ def search(low, high, piv, tar):
 
 indexFile = open(indexer, 'rb')
 offset = pickle.load(indexFile)
-
-'''
-while (1):
-    print("Using the search component of the Search Engine!")
-    query = input("Enter the query you want to find: ")
-    starttime = time.time()
-    query = query.lower()
-    splitQuery = query.split()
-
-    # intersectedID = search(low, high, piv, ps.stem(splitQuery[0]))[2]
-
-    someList = []
-    for token in splitQuery:
-        firstChar = token[0]
-        low = offset[firstChar][0]
-        high = offset[firstChar][1]
-        piv = low + int((high-low)/2)
-        intersectedID = search(low, high, piv, ps.stem(token))
-        someList.append(intersectedID)
-        print(token + " --> " + str(intersectedID[1]))
-
-    start4 = time.time()
-    someList = sorted(someList, key=itemgetter(1))
-
-    someList = list(map(lambda x: x[2], someList))
-    sect = list(reduce(lambda x, y: x & y.keys(), someList))
-    for k, v in enumerate(sect):
-        freq = 0
-        for dic in someList:
-            freq += dic[v]
-        sect[k] = (freq, v)
-
-    sect.sort(reverse=True)
-    print("Processing Set -> " + str(time.time() - start4))
-    for i in range(0, 5):
-        sect[i] = getUrl(sect[i][1])
-    print(sect[0:5])
-    print(time.time() - starttime)
-    '''
+print(offset)
 
 linecache.getline(docID, 0)
 
@@ -162,5 +124,5 @@ def searchedPOST():
 
 
 if __name__ == "__main__":
-    linecache.getline("id.txt", 0)
+    linecache.getline("mastermerge.txt", 0)
     app.run(debug=True)
