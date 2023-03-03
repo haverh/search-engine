@@ -88,7 +88,7 @@ def mergeTwo(file1Pointer, file2Pointer, file1, file2, mergedFileName):
             # dict[0] = 0
             tempDict[word].append(0)
             # dict[1] = dict with docID as key
-            tempDict[word].append(defaultdict(int))
+            tempDict[word].append(defaultdict(list))    
             # loop through each line#[1] and add
             # if docID exists add frequency
             for doc in line1[2]:
@@ -96,14 +96,20 @@ def mergeTwo(file1Pointer, file2Pointer, file1, file2, mergedFileName):
                     tempDict[word][0] += 1
                     tempDict[word][1][doc] = line1[2][doc]
                 else:
-                    tempDict[word][1][doc] += line1[2][doc]
+                    tempDict[word][1][doc][0] += line1[2][doc][0]
+                    for pos in line1[2][doc][1]:
+                        tempDict[word][1][doc][1].append(pos)
+                    tempDict[word][1][doc][1].sort()
 
             for doc2 in line2[2]:
                 if (doc2 not in tempDict[word][1]):
                     tempDict[word][0] += 1
                     tempDict[word][1][doc2] = line2[2][doc2]
                 else:
-                    tempDict[word][1][doc2] += line2[2][doc2]
+                    tempDict[word][1][doc2][0] += line2[2][doc2][0]
+                    for pos in line2[2][doc2][1]:
+                        tempDict[word][1][doc][1].append(doc2)
+                    tempDict[word][1][doc][1].sort()
 
             line = word + "|" + str(tempDict[word][0]) + "|" + \
                 ','.join(map(str, tempDict[word][1].items())) + "\n"
@@ -152,7 +158,6 @@ for directoryEntry in listOfDirectories:
             # Load the json 'content' and parse with BeautifulSoup
             # json 'content' is in HTML format
             # print(filename)
-            print(str(directoryEntry)+"-"+str(filename))
             soup = BeautifulSoup(data['content'], 'html.parser')
             # Split at non-alphanumeric characters
             tokens = re.split("[^a-zA-Z0-9]+", soup.get_text())
@@ -168,15 +173,16 @@ for directoryEntry in listOfDirectories:
                         invertedIndex[stemmedWord].append(1)
                         invertedIndex[stemmedWord].append(defaultdict(list))
                         invertedIndex[stemmedWord][1][docID].append(1)
-                        invertedIndex[stemmedWord][1][docID].append(
-                            wordPosition)
+                        invertedIndex[stemmedWord][1][docID].append([wordPosition])
                         tokAmount += 1
                     else:
                         if (docID not in invertedIndex[stemmedWord][1].keys()):
                             invertedIndex[stemmedWord][0] += 1
+                            invertedIndex[stemmedWord][1][docID] = [0,[]]
                         invertedIndex[stemmedWord][1][docID][0] += 1
-                        invertedIndex[stemmedWord][1][docID].append(
+                        invertedIndex[stemmedWord][1][docID][1].append(
                             wordPosition)
+                wordPosition += 1
 
             if (docID % 15000 == 0):
                 print(tokAmount)
