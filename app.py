@@ -1,34 +1,27 @@
-from flask import Flask, render_template, request
-from search import searchFor
+from flask import Flask, render_template, request, url_for, redirect
+from search import run
 import linecache
 
 app = Flask(__name__, template_folder="templates", static_folder="statics")
 
 
-@app.route("/")
+@app.route("/", methods=["POST", "GET"])
 def home():
+    if request.method == "POST":
+        query = request.form["srch"]
+        listOfUrls = run(query)
+        return redirect(url_for("search"))
     return render_template("index.html")
 
 
-@app.route("/", methods=["POST"])
-def homePOST():
-    text = request.form["srch"]
-    print(text)
-    return searchFor(text)
-
-
-@app.route("/search")
+@app.route("/search", methods=["POST", "GET"])
 def searched():
-    return render_template("searched.html")
+    if request.method == "POST":
+        query = request.form["srch"]
+        listOfUrls = run(query)
+    return render_template("searched.html", urlsList=listOfUrls)
 
-
-@app.route("/search", methods=["POST"])
-def searchedPOST():
-    text = request.form["srch"]
-    print(text)
-    return searchFor(text)
 
 
 if __name__ == "__main__":
-    linecache.getline("id.txt", 0)
     app.run(debug=True)

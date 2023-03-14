@@ -1,11 +1,110 @@
 html {
-    background-color: rgb(145, 151, 150);
+    background-color: rgb(173, 216, 230);
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background-color: rgb(173, 216, 230);
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+#topside {
+    display: flex;
+    align-items: center;
+    background-color: rgb(173, 216, 230);
+    height: 10%;
+    width: 100%;
+}
+
+#profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background-color: rgb(240, 240, 240);
+    margin-left: auto;
+    margin-right: 20px;
+    border-radius: 2em;
+    border-style: solid;
+    border-color: rgba(69, 163, 132, 0.986);
+}
+
+#profile:hover {
+    cursor: pointer;
+}
+
+#profile > img{
+    width: 35px;
+    height: 35px;
+}
+
+hr {
+    border-width: 2px;
+    border-color: cadetblue;
+}
+
+#bottomside {
+    height: 100%;
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
+#leftside {
+    background-color: rgb(173, 216, 230);
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+#rightside {
+    background-color: rgb(173, 216, 230);
+    grid-column-start: 3;
+    grid-column-end: 4;
+}
+
+#rightside > hr{
+    border-top: 5px solid black;
+    padding: 0;
+    margin: 0;
+}
+
+#searchForm {
+    padding-right: 2em;
+    width: 100%;
 }
 
 #searchElements {
     display: flex;
+    background-color: cornsilk;
+    width: auto;
     height: 5em;
     margin: 1em;
+    border-radius: 1em;
+}
+
+#searchResults {
+    background-color: rgb(173, 216, 230);
+}
+
+
+.resultDisplay {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 5px;
+    margin: 5px 0 5px 150px;
+}
+
+.resultDisplay > a {
+    text-decoration: none;
+}
+
+.resultDisplay:hover > a {
+    text-decoration: underline;
 }
 
 #title {
@@ -40,6 +139,7 @@ html {
     font-size: 1em;
     width: 600px;
     height: 50px;
+    padding: 0 10px;
     border-top-left-radius: 1em;
     border-bottom-left-radius: 1em;
     border-right-style: hidden;

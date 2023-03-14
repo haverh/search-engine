@@ -1,0 +1,67 @@
+# List of poor performing queries
+
+1. master of software engineering		# Poor runtime performance, had a runtime above 300ms.
+						# Changed the data structure used for the
+						# inverted index.
+
+2. to be or not to be 				# Poor runtime performace, had a runtime above 300ms.
+						# We search only for unique terms
+
+3. in his the a in that they 			# Poor runtime performance, had a runtime above 300ms.
+						# Reduced the size of the shelf file by removing
+						# unnecessary attributes
+
+4. a						# Poor runtime performance, had a runtime above 300ms.
+						# Further reduced the amount of data the
+						# inverted index holds
+
+5. master of the software in his engineering	# Poor runtime performance, had a runtime above 300ms
+						# Removal of stopwords when it appears more than half of the 
+						# query terms.
+
+6. data @ uci					# Poor effectiveness, retrieved irrelevant websites.
+						# Included important words such as heading, bold, titles
+
+7. artifical intelligent			# Poor effectiveness, retrieved irrelevant websites.
+						# Modified the weight of important words.
+
+8. computer science at uci			# Poor runtime performance, had a runtime above 300ms.
+						# Intersection in ascending order of document
+						# frequency.
+
+9. zzef1 zzz3					# Poor runtime performance, had a runtime above 300ms.
+						# Switched from linear to binary search when reading
+						# line from file.
+
+
+10. Quantum Physics Computing Algorithms	# Poor runtime performance, had a runtime above 300ms.
+						# In the engine.py, implementation of a class that holds
+						# the attributes of a term document pair.
+						# Already used attributes were removed from the data structure
+						# after computation.
+# List of well performing queries
+11. absorbed 
+
+12. machine learning
+
+13.	creative cloud 
+
+14. cristina lopes
+
+15. computer science
+
+16.	ACM
+
+17. information retrieval
+
+18. Video Game Development
+
+19. Donald Bren School of information and computer science
+
+20. github 
+
+
+
+
+
+

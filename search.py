@@ -1,128 +1,139 @@
+# Contributors
+#	Victor Chhun
+#	Haver  Ho
 
-import ast
-import linecache
-from nltk.stem import PorterStemmer
+# search.py
+# Search Component of the Search Engine
+
+# Import
 import pickle
 import time
+import linecache
+import json
+import nltk
+import re
+import shelve
+import math
+from collections import defaultdict
 from operator import itemgetter
 from functools import reduce
-from flask import Flask, render_template, request
+from nltk.stem import PorterStemmer
+from engine import TD_Attributes
 
+# File Names
+indexFile = "finalResult.txt"
+URLFile = "urls.txt"
+wordsFile = "words.txt"
+stopwordsFile = "stopwords"
+
+indexF = open(indexFile, "r")
+stopwordsF = open(stopwordsFile, "rb")
+
+linecache.getline(indexFile, 0)
+# Porter Stemmer Algorithm
 ps = PorterStemmer()
-docID = 'mastermerge.txt'
-indexer = 'offset2.bin'
-urls = 'urls2.txt'
 
+# Loading in information required
+stopwords = pickle.load(stopwordsF)
+termShelf = shelve.open("index.shelve")
+termShelf[ps.stem("of")]
 
-def recache(lineNo, targetLen):
-    line = linecache.getline(docID, lineNo)
-    return line[0:30].split('|')[0]
+# Helper Functions
+# Change stop words to a set
+def findStopWords(listOfWords):
+	nonStopWords = list();
+	for word in listOfWords:
+		if word not in stopwords:
+			nonStopWords.append(word)
+			
+	return nonStopWords
 
+# Returns the set of unique terms of the query
+def getUniqueTerms(termList):
+	return list(set(termList))
 
-def getLine(lineNo):
-    line = linecache.getline(docID, lineNo)
-    line = line.split('|')
-    line[1] = int(line[1])
-    line[2] = line[2].rstrip() + ','
-    line[2] = dict(ast.literal_eval(line[2]))
-    return line
+# Retrieves the shelf associating with each term and append it
+# to a list
+# Return list of shelf's keys
+# Error: Return -1
+def getQueryShelf(terms):
+	startTime = time.time()
+	queryResult = list()
+	for word in terms:
+		stemWord = ps.stem(word)
+		if stemWord not in termShelf:
+			return -1
+		# Info contains the TF and TF-IDF score  associating with the term to document
+		# Info == [DF, TF-IDF Score]
+		info = termShelf[stemWord]
+		queryResult.append((info[0], info[1]))
+	return queryResult
 
+# Main Function
+def run(query):
+	query = query.lower();
+	splitQ = re.split("[^a-zA-Z0-9]+", query)
 
-def getUrl(docNo):
-    line = linecache.getline(urls, docNo)
-    return line.rstrip()
+	splitQ = getUniqueTerms(splitQ)
+	removeStopWords = findStopWords(splitQ)
+	
+	# With Shelve
+	queryResult = list()
+	queryResult = getQueryShelf(splitQ);
 
+	# Error Message when the query has found a word that does not exist
+	# or contain misspellings
+	if queryResult == -1:
+		print("The query you search for either contain misspellings or does not match with any documents")
+		print("Please re-enter your search query!\n")
+		return -1
+	
+	# If there are no errors and the queryResult is non-empty
+	if queryResult != -1 and len(queryResult) > 0:
+	
+		# Sorts the query result by their frequency
+		# lowest frequency --> largest frequency
+		queryResult = sorted(queryResult, key = lambda x: x[0])
 
-def search(low, high, piv, tar):
-    while (low <= high):
-        piv = int((high-low)/2) + low
-        line = recache(piv, len(tar))
+		# Set initial intersection as the first query term (also the lowest frequency)
+		intersection = queryResult[0][1]
+		
+		# Go through all terms and find the intersection.
+		# Starting from the lowest set of intersection
+		# to the largest set of intersection 
+		for index in range(1, len(queryResult)):
+			keys = intersection.keys()
+			innerIntersection = dict()
+			for docID in keys:
 
-        if (line == tar):
-            return getLine(piv)
+				if docID in queryResult[index][1]:
+					# Keep the TF-IDF score of whichever is bigger
+					if intersection[docID][1] < queryResult[index][1][docID][1]:
+						innerIntersection[docID] = intersection[docID]
+					else:
+						innerIntersection[docID] = queryResult[index][1][docID]
+			# Reset the intersection dictionary for the next iteration	
+			intersection = innerIntersection
+		
+		# Sort the intersection dictionary by highest TF-IDF score
+		intersection = dict(sorted(intersection.items(), key = lambda x: x[1][1], reverse = True))
 
-        if (line > tar):
-            high = piv-1
-            # return search(low,high,piv,tar);
-        else:
-            low = piv+1
-            # return search(low,high,piv,tar);
-    return [tar, 0, dict()]
+		# Sort list tuples by highest score 
+		tuples = sorted(intersection.items(), key = lambda x: x[1][1], reverse = True)
 
+		# Get the top 5 results and
+		# Retrieve their associated URL link
+		TopRanks = list()
+		for tup in tuples:
+			if len(TopRanks) > 9:
+				break;
+			docID = tup[0]
+			TopRanks.append( linecache.getline(URLFile, docID).strip("\n") )
+			print(linecache.getline(URLFile, tup[0]).split("|")[0].strip("\n"))
 
-indexFile = open(indexer, 'rb')
-offset = pickle.load(indexFile)
-print(offset)
-
-linecache.getline(docID, 0)
-
-
-def searchFor(queryString):
-    starttime = time.time()
-    query = queryString.lower()
-    splitQuery = query.split()
-
-    # intersectedID = search(low, high, piv, ps.stem(splitQuery[0]))[2]
-
-    someList = []
-    for token in splitQuery:
-        firstChar = token[0]
-        low = offset[firstChar][0]
-        high = offset[firstChar][1]
-        piv = low + int((high-low)/2)
-        intersectedID = search(low, high, piv, ps.stem(token))
-        someList.append(intersectedID)
-        # print(token + " --> " + str(intersectedID[1]))
-
-    start4 = time.time()
-    someList = sorted(someList, key=itemgetter(1))
-
-    someList = list(map(lambda x: x[2], someList))
-    sect = list(reduce(lambda x, y: x & y.keys(), someList))
-    for k, v in enumerate(sect):
-        freq = 0
-        for dic in someList:
-            freq += dic[v]
-        sect[k] = (freq, v)
-
-    sect.sort(reverse=True)
-    # print("Processing Set -> " + str(time.time() - start4))
-    for i in range(0, 5):
-        sect[i] = getUrl(sect[i][1])
-
-    print(time.time() - starttime)
-    return sect[0:5]
-    # print(sect[0:5])
-    # print(time.time() - starttime)
-
-
-app = Flask(__name__, template_folder="templates", static_folder="statics")
-
-
-@app.route("/")
-def home():
-    return render_template("index.html")
-
-
-@app.route("/", methods=["POST"])
-def homePOST():
-    text = request.form["srch"]
-    print(text)
-    return searchFor(text)
-
-
-@app.route("/search")
-def searched():
-    return render_template("searched.html")
-
-
-@app.route("/search", methods=["POST"])
-def searchedPOST():
-    text = request.form["srch"]
-    print(text)
-    return searchFor(text)
-
-
+		return TopRanks
 if __name__ == "__main__":
-    linecache.getline("mastermerge.txt", 0)
-    app.run(debug=True)
+	while (1):
+		query = input("Enter the query: ")
+		run(query)
+		
